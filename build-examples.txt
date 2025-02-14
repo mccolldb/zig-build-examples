@@ -1,0 +1,12 @@
+zig build --help    // check project specific options
+zig build 
+zig build --summary all
+
+zig build run -Dwindows         // boolean option
+zig build run -Dversion=1.2.3   // string option
+zig build run -Doptimize=ReleaseSmall --summary all
+                        Debug
+                        ReleaseSafe
+                        ReleaseFast
+                        ReleaseSmall
+ zig build test --summary all
