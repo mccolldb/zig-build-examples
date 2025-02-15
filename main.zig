@@ -54,7 +54,7 @@ pub fn main() !void {
         const u32_ptr = try gpa.create(u32);
         u32_ptr.* = 12345;
         std.debug.print("u32_ptr: {any}={}\n", .{ u32_ptr, u32_ptr.* });
-        //gpa.destroy(u32_ptr); // need to call destroy() to avoid memory leak
+        gpa.destroy(u32_ptr); // need to call destroy() to avoid memory leak
         //std.debug.print("u32_ptr: {any}={}\n", .{ u32_ptr, u32_ptr.* }); // use after free --> segfault
         //gpa.destroy(u32_ptr); // double free --> panic
     } // defer runs after the scope ends
