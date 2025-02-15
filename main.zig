@@ -45,6 +45,20 @@ pub fn main() !void {
     }
     try w.print("\n", .{});
     try bw.flush();
+
+    // check for memory leaks...
+    {
+        var gp_allocator = std.heap.GeneralPurposeAllocator(.{}){};
+        defer std.debug.assert(gp_allocator.deinit() == .ok); // this will fail if memory leaked
+        const gpa = gp_allocator.allocator();
+        const u32_ptr = try gpa.create(u32);
+        u32_ptr.* = 12345;
+        std.debug.print("u32_ptr: {any}={}\n", .{ u32_ptr, u32_ptr.* });
+        //gpa.destroy(u32_ptr); // need to call destroy() to avoid memory leak
+        //std.debug.print("u32_ptr: {any}={}\n", .{ u32_ptr, u32_ptr.* }); // use after free --> segfault
+        //gpa.destroy(u32_ptr); // double free --> panic
+    } // defer runs after the scope ends
+    std.debug.print("all good exiting...\n", .{});
 }
 
 test "simple test" {
