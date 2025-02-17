@@ -10,3 +10,14 @@ zig build run -Doptimize=ReleaseSmall --summary all
                         ReleaseFast
                         ReleaseSmall
  zig build test --summary all
+
+zig build-exe -lc src/main.zig // build main.zig with libc
+
+zig run src/main.zig // run main.zig 
+zig run -lc src/main.zig // run main.zig with libc
+
+zig test src/main.zig // run tests
+
+zig build-obj doctest.zig -femit-docs
+python -m http.server 8000 -d docs/
+open browsere to http://localhost:8000/

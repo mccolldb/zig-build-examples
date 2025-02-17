@@ -1,5 +1,7 @@
+//! This is the main entry point for the example program.
 const std = @import("std");
 const helper = @import("helper.zig"); // local source file
+const doctest = @import("doctest.zig"); // local source file
 
 const config = @import("config"); // from build system
 
@@ -7,6 +9,7 @@ extern fn foo_bar() void; // optional -- ok if missing when unused
 extern fn fizzOrbuzz(n: usize) ?[*:0]const u8; // from static library
 extern fn fizz_buzz(n: usize) ?[*:0]const u8; // from dynamic library
 
+/// This is the main function.
 pub fn main() !void {
     std.debug.print("config version: {s}\n", .{config.version});
     // const semver = std.SemanticVersion.parse(config.version) catch unreachable;
@@ -23,6 +26,7 @@ pub fn main() !void {
     const stdout = std.io.getStdOut();
     var bw = std.io.bufferedWriter(stdout.writer());
     const w = bw.writer();
+
     // use static library
     try w.print("static :  ", .{});
     for (1..20) |n| {
@@ -45,6 +49,13 @@ pub fn main() !void {
     }
     try w.print("\n", .{});
     try bw.flush();
+
+    // doctest
+    const csvfile = try std.fs.cwd().openFile("test.csv", .{});
+    const filePos = doctest.Pos{ .x = 0, .y = 0 };
+    _ = doctest.readCell(csvfile, filePos) catch |err| {
+        std.debug.print("error: {}\n", .{err});
+    };
 
     // check for memory leaks...
     {
