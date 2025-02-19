@@ -19,5 +19,6 @@ zig run -lc src/main.zig // run main.zig with libc
 zig test src/main.zig // run tests
 
 zig build-obj doctest.zig -femit-docs
-python -m http.server 8000 -d docs/
+zig build docs
+python -m http.server 8000 -d zig-out/docs/
 open browsere to http://localhost:8000/
